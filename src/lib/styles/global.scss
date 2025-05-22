@@ -1,0 +1,32 @@
+@use "./mixins.scss";
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    @include mixins.foundation;
+    font-display: swap;
+}
+
+body, html, menu, figure {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: var(--color-accent-bg);
+    text-decoration: none;
+}
+
+button {
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    @include mixins.color(primary);
+
+    @include mixins.interactable;
+
+    display: flex;
+    justify-content: center;
+}

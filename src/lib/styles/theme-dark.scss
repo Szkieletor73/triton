@@ -1,0 +1,41 @@
+:root {
+    /* Base Colors */
+    --color-foundation: hsl(220 18% 12%);       /* Deep Space - Primary background */
+    --color-surface: hsl(220 18% 16%);         /* Dark Matter - Secondary surfaces */
+    --color-element: hsl(220 18% 22%);         /* Cosmic Layer - Tertiary elements */
+  
+    /* Primary Brand */
+    --color-primary-bg: hsl(210 80% 32%);      /* Triton Blue - Primary actions, headers */
+    --color-primary-text: hsl(210 40% 92%);    /* Arctic Ice - Text on primary */
+  
+    /* Accent */
+    --color-accent-bg: hsl(180 60% 40%);       /* Neptune Teal - Highlights, progress bars */
+    --color-accent-text: hsl(180 40% 92%);     /* Glacial Text - Readable on teal */
+  
+    /* System Notifications */
+    --color-error-bg: hsl(0 60% 32%);          /* Supernova Red - Critical failures */
+    --color-error-text: hsl(0 60% 90%);
+
+    --color-warning-bg: hsl(45 80% 40%);       /* Pulsar Amber - Warnings */
+    --color-warning-text: hsl(45 40% 12%);
+
+    --color-info-bg: hsl(210 60% 30%);         /* Stellar Blue - Status updates */
+    --color-info-text: hsl(210 40% 90%);
+
+    --color-success-bg: hsl(140 50% 30%);      /* Gaia Green - Completed actions */
+    --color-success-text: hsl(140 40% 90%);
+  
+    /* Neutrals */
+    --color-border: hsl(220 12% 24%);          /* Asteroid Belt - Divider lines */
+    --color-disabled-bg: hsl(220 12% 18%);     /* Dark Matter - Inactive */
+    --color-disabled-text: hsl(220 12% 50%);
+  
+    /* Text & Icons */
+    --color-text-main: hsl(220 30% 90%);       /* Starlight - Main content */
+    --color-text-subtle: hsl(220 20% 70%);     /* Nebula Gray - Subtle text */
+    --color-text-placeholder: hsl(220 15% 50%);/* Lunar Dust - Placeholders */
+  
+    /* Interactive States */
+    --hover-overlay: hsl(0 0% 100% / 0.08);    /* Subtle "lift" effect */
+    --active-overlay: hsl(0 0% 0% / 0.12);     /* Tactile "press" feedback */
+  }

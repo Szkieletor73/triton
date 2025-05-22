@@ -1,0 +1,70 @@
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('/fonts/NotoSans-VariableFont_wdth,wght.ttf');
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('/fonts/NotoSans-Italic-VariableFont_wdth,wght.ttf');
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Roboto Mono';
+    src: url('/fonts/RobotoMono-VariableFont_wdth,wght.ttf');
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Roboto Mono';
+    src: url('/fonts/RobotoMono-Italic-VariableFont_wdth,wght.ttf');
+    font-style: italic;
+}
+
+@mixin monospace {
+    font-family: var(--font-mono);
+}
+
+:root {
+    /* Font families */
+    --font-primary: 'Noto Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Roboto Mono', Menlo, Consolas, monospace;
+
+    /* Scaling */
+    --text-base: 1rem;
+    --text-scale-ratio: 1.25;
+
+    /* Type Scale */
+    --text-xs:  calc(var(--text-base) / var(--text-scale-ratio));
+    --text-sm:  var(--text-base);
+    --text-md:  calc(var(--text-base) * var(--text-scale-ratio));
+    --text-lg:  calc(var(--text-md) * var(--text-scale-ratio));
+    --text-xl:  calc(var(--text-lg) * var(--text-scale-ratio));
+    --text-2xl: calc(var(--text-xl) * var(--text-scale-ratio));
+    --text-3xl: calc(var(--text-2xl) * var(--text-scale-ratio));
+    --text-4xl: calc(var(--text-3xl) * var(--text-scale-ratio));
+
+    /* Line Heights */
+    --leading-dense: 1.25;
+    --leading-normal: 1.5;
+    --leading-sparse: 1.75;
+}
+
+body {
+    font-family: var(--font-primary);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    font-weight: 400;
+}
+
+h1 { font-size: var(--text-3xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+h4 { font-size: var(--text-lg); }
+h5 { font-size: var(--text-md); }
+h6 { font-size: var(--text-sm); }
+
+button {
+    font-size: var(--text-sm);
+    display: flex;
+    justify-items: center;
+    align-items: center;
+}

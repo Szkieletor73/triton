@@ -15,11 +15,19 @@ name = "app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2.2.0" }
+tauri-build = { version = "2.2.0", features = [] }
 
 [dependencies]
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-log = "0.4"
-tauri = { version = "2.5.0" }
-tauri-plugin-log = "2.0.0-rc"
+serde_json = "^1.0"
+serde = { version = "^1.0", features = ["derive"] }
+log = "^0.4"
+tauri = { version = "^2.5.0", features = [] }
+tauri-plugin-log = "^2.0.0-rc"
+tokio = { version = "^1.45.0", features = ["full"] }
+sqlx = { version = "^0.8.5", features = ["sqlite", "runtime-tokio", "macros", "chrono"] }
+chrono = { version = "^0.4", features = ["serde"] }
+tauri-plugin-dialog = "2"
+thiserror = "2.0.12"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-window-state = "2"
