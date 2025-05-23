@@ -4,6 +4,7 @@ CREATE TABLE items (
     extension TEXT,
     title TEXT NOT NULL,
     description TEXT,
+    thumbnail TEXT,
     added DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_verified DATETIME DEFAULT CURRENT_TIMESTAMP
 );

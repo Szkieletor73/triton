@@ -25,7 +25,7 @@
 
 
 <style lang="scss">
-    @use "$lib/styles/mixins";
+    @use "$lib/styles/mixins/generic";
 
     .container {
         display: flex;
@@ -38,7 +38,7 @@
         border-top-left-radius: 12px;
         box-sizing: border-box;
 
-        @include mixins.foundation;
+        @include generic.foundation;
         height: calc(100vh - 32px);
         width: 100%;
         overflow-y: auto;

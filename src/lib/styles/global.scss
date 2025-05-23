@@ -1,11 +1,11 @@
-@use "./mixins.scss";
+@use "./mixins/generic";
 
 * {
     box-sizing: border-box;
 }
 
 html {
-    @include mixins.foundation;
+    @include generic.foundation;
     font-display: swap;
 }
 
@@ -19,14 +19,8 @@ a {
     text-decoration: none;
 }
 
-button {
-    border: none;
-    border-radius: 4px;
-    padding: 4px 8px;
-    @include mixins.color(primary);
-
-    @include mixins.interactable;
-
-    display: flex;
-    justify-content: center;
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }

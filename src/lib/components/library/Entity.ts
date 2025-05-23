@@ -6,6 +6,7 @@ export interface LibraryItem {
     path: string,
     title: string,
     description?: string,
+    thumbnail?: string,
     added: number,
     lastVerified: number,
 }

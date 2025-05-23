@@ -34,8 +34,9 @@ pub fn run() {
             tauri::generate_handler![
                 commands::raw_sql,
                 commands::add_items,
+                commands::delete_items,
                 commands::get_items,
-                commands::get_item_details
+                commands::get_item_details,
             ]
         )
         .run(tauri::generate_context!())

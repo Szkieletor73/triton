@@ -40,6 +40,16 @@ pub async fn add_items(
     )
 }
 
+#[tauri::command]
+pub async fn delete_items(
+    pool: State<'_, database::DbPool>,
+    ids: Vec<i64>
+) -> Result<Vec<i64>, String> {
+    database::operations::delete_items(&pool, &ids)
+        .await
+        .map_err(|e| e.to_string())
+}
+
 /// Retrieves IDs of items based on provided search terms.
 #[tauri::command]
 pub async fn get_items(

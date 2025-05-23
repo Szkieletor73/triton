@@ -59,6 +59,8 @@
   },
   "dependencies": {
     "@tauri-apps/plugin-dialog": "~2.2.1",
-    "@tauri-apps/plugin-window-state": "~2.2.2"
+    "@tauri-apps/plugin-window-state": "~2.2.2",
+    "@types/luxon": "^3.6.2",
+    "luxon": "^3.6.1"
   }
 }

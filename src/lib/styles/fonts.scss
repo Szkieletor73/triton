@@ -29,8 +29,8 @@
     --font-mono: 'Roboto Mono', Menlo, Consolas, monospace;
 
     /* Scaling */
-    --text-base: 1rem;
-    --text-scale-ratio: 1.25;
+    --text-base: 16px;
+    --text-scale-ratio: 1.125; // Major Second
 
     /* Type Scale */
     --text-xs:  calc(var(--text-base) / var(--text-scale-ratio));

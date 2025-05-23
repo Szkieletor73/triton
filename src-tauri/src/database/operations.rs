@@ -78,7 +78,7 @@ pub async fn get_item_details(
 
     let query = String::from(
         format!(
-            "SELECT * FROM items WHERE id IN [{}]",
+            "SELECT * FROM items WHERE id IN ({})",
             ids.iter().map(|id| id.to_string()).collect::<Vec<_>>().join(", ")
         )
     );
@@ -126,5 +126,19 @@ pub async fn add_items(
     query.push_str(" RETURNING id");
 
     // Execute
+    sqlx::query_scalar::<_, i64>(&query).fetch_all(pool).await
+}
+
+pub async fn delete_items(
+    pool: &SqlitePool,
+    ids: &Vec<i64>
+) -> Result<Vec<i64>, Error> {
+    let query = String::from(
+        format!(
+            "DELETE FROM items WHERE id IN ({}) RETURNING id",
+            ids.iter().map(|id| id.to_string()).collect::<Vec<_>>().join(", ")
+        )
+    );
+
     sqlx::query_scalar::<_, i64>(&query).fetch_all(pool).await
 }

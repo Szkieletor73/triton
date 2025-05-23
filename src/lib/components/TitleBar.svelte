@@ -49,10 +49,10 @@
 
 
 <style lang="scss">
-    @use "$lib/styles/mixins";
+    @use "$lib/styles/mixins/generic";
 
     .container {
-        @include mixins.surface;
+        @include generic.surface;
 
         height: 32px;
         user-select: none;
@@ -67,13 +67,18 @@
         display: flex;
 
         button {
+            @include generic.interactable;
 
+            font-size: 14px;
             padding: 0px 16px;
+            border: none;
+
+            color: var(--color-primary-text);
             background-color: transparent;
             transition: background-color 0.2s;
 
             &.action-close:hover {
-                @include mixins.color(error);
+                @include generic.color(error);
             }
         }
     }

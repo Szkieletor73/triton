@@ -24,10 +24,10 @@
 </aside>
 
 <style lang="scss">
-    @use "$lib/styles/mixins";
+    @use "$lib/styles/mixins/generic";
 
     .container {
-        @include mixins.surface;
+        @include generic.surface;
         height: calc(100vh - 32px);
     }
 
@@ -44,8 +44,8 @@
         width: 100%;
         min-width: min-content;
         height: 64px;
-        @include mixins.element;
-        @include mixins.interactable;
+        @include generic.element;
+        @include generic.interactable;
 
         display: inline-flex;
         flex-wrap: nowrap;

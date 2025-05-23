@@ -12,6 +12,8 @@ pub struct Item {
 
     pub description: Option<String>,
 
+    pub thumbnail: Option<String>,
+
     #[serde(with = "chrono::serde::ts_seconds")]
     pub added: chrono::DateTime<chrono::Utc>,
 
