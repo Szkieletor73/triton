@@ -12,92 +12,50 @@ class LibraryManager {
         return LibraryManager.#instance
     }
 
-
     /**
-     * There are three possible values for `get()`:  
+     * There are three possible values for `#items.get()`:  
      * `typeof LibraryItem` - a loaded item object.  
      * `null` - item exists, but isn't loaded  
      * `undefined` - item with that ID doesn't exist.
      * As items should usually only be accessed using keys of #items,
-     * `undefined` should NOT occur under any circumstance.
+     * `undefined` being returned should be considered an error.
      */
     #items: SvelteMap<number, LibraryItem | null> = new SvelteMap()
-    offset: number = $state(0)
-    pageSize: number = 20
 
     constructor() {}
 
-    async fetchItems() {
-        invoke('get_items', { search: "" }).then(
-            (items) => {
-                if (Array.isArray(items)) {
-                    items.forEach((item: number) => {
-                        this.#items.set(item, null)
-                    });
-                }
-
-                this.fetchItemDetails(this.ids)
-            },
-            (error) => { console.error(error) }
-        )
+    getItems(): number[] {
+        console.log(this.#items)
+        console.log(Array.from(this.#items.keys()))
+        return Array.from(this.#items.keys())
     }
 
-    async fetchItemDetails(ids: number[]) {
-        invoke('get_item_details', { ids }).then(
-            (results) => {
-                if (Array.isArray(results)) {
-                    results.forEach((result: LibraryItem) => {
-                        this.#items.set(result.id, result)
-                    });
-                }
-            },
-            (error) => { console.error(error) }
-        )
-    }
-
-    async addItems() {
-        invoke('add_items').then(
-            (newItems) => {
-                if (Array.isArray(newItems)) {
-                    newItems.forEach(item => {
-                        this.#items.set(item, null)
-                    });
-                }
+    fetchItems() {
+        invoke("get_items", {
+            search: ""
+        }).then((items) => {
+            if (Array.isArray(items)) {
+                items.forEach((item: number) => {
+                    this.#items.set(item, null)
+                })
+            } else {
+                console.error("[LibraryManager] get_items did not return an array:", items)
             }
-        )
+        })
     }
 
-    async deleteItems(ids: number[]) {
-        invoke('delete_items', { ids }).then(
-            (deletedItems) => {
-                if (Array.isArray(deletedItems)) {
-                    deletedItems.forEach(item => {
-                        this.#items.delete(item)
-                    })
-                }
+    loadItems(ids: number[]) {
+        invoke("get_item_details", {
+            ids: ids
+        }).then((items) => {
+            if (Array.isArray(items)) {
+                items.forEach((item: LibraryItem) => {
+                    this.#items.set(item.id, item)
+                })
+            } else {
+                console.error("[LibraryManager] get_item_details did not return an array:", items)
             }
-        )
-    }
-
-    get ids() {
-        return this.#items.keys().toArray()
-    }
-
-    get items() {
-        return this.#items.values().toArray()
-    }
-
-    /**
-     * Function accessor to #items Map.
-     * @param id of the item
-     * @returns `LibraryItem` if it exists and is loaded, `null` if the item is not loaded.
-     */
-    item(id: number): LibraryItem | null {
-        const item = this.#items.get(id)
-        if (item === undefined) {
-            throw new Error(`[LibraryManager] Attempted to get nonexistent item: id ${id}`);
-        }
-        return item
+        })
     }
 }
 

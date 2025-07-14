@@ -8,6 +8,8 @@ pub struct Item {
 
     pub path: String,
 
+    pub extension: String,
+
     pub title: String,
 
     pub description: Option<String>,

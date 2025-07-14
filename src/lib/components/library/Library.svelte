@@ -1,23 +1,50 @@
 <script lang="ts">
-    import Menu from "./Menu.svelte"
-    import List from "./List.svelte"
-    import LibraryManager from "./LibraryManager.svelte";
+    import LibraryList from "./LibraryList.svelte"
+    import LibraryMenu from "./LibraryMenu.svelte"
+    import LibraryManager from "$lib/components/library/LibraryManager.svelte"
+    import { onMount } from "svelte";
 
-    LibraryManager.fetchItems()
+    onMount(() => {
+        LibraryManager.fetchItems()
+    })
+    
+    const filteredIds: Number[] = $derived(LibraryManager.getItems())
 </script>
 
 <div class="library-container">
-    <Menu></Menu>
-    <List></List>
+    <LibraryMenu></LibraryMenu>
+
+    {#if filteredIds.length}
+        <LibraryList items={filteredIds}></LibraryList>
+    {:else}
+        <div class="library-no-results">
+            <h1>SORRY NOTHING</h1>
+            <h2>No results have been found.</h2>
+        </div>
+    {/if}
 </div>
 
 <style lang="scss">
-    @use "$lib/styles/mixins/generic";
-
     .library-container {
-        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
 
-        display: grid;
-        grid-template-rows: max-content auto;
+    .library-no-results {
+        position: absolute;
+        top: 128px;
+        left: 0;
+        right: 0;
+
+        opacity: 0.3;
+        pointer-events: none;
+        user-select: none;
+
+        & h1, & h2 {
+            margin: auto;
+            display: block;
+            width: fit-content;
+        }
     }
 </style>

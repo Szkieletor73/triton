@@ -109,7 +109,7 @@ pub async fn add_items(
         let item = (
             abs_path.as_str(),
             filename,
-            extension,
+            extension
         );
 
         query.push_str(

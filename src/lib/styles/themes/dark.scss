@@ -1,0 +1,88 @@
+// Swatch
+$color-neutral-1: #121417;
+$color-neutral-2: #1b1f22;
+$color-neutral-3: #212529;
+$color-neutral-4: #2d3339;
+$color-neutral-5: #363d44;
+$color-neutral-6: #49525b;
+$color-neutral-7: #5b6671; // font to black
+$color-neutral-8: #6d7a88;
+$color-neutral-9: #778592;
+$color-neutral-10: #828f9b;
+$color-neutral-11: #d2d6db;
+$color-neutral-12: #f4f5f6;
+
+$color-primary-1: #04100f;
+$color-primary-2: #09201d;
+$color-primary-3: #0d302c;
+$color-primary-4: #11403b;
+$color-primary-5: #15514a;
+$color-primary-6: #1a6158;
+$color-primary-7: #1e7167;
+$color-primary-8: #279185;
+$color-primary-9: #2a9d8f;
+$color-primary-10: #33c1b1;
+$color-primary-11: #cff2ee;
+$color-primary-12: #effbf9;
+
+$color-accent-1: #0c060e;
+$color-accent-2: #180c1c;
+$color-accent-3: #24132b;
+$color-accent-4: #301939;
+$color-accent-5: #3c1f47;
+$color-accent-6: #532c63;
+$color-accent-7: #6b3880;
+$color-accent-8: #8f4baa;
+$color-accent-9: #9B59B6;
+$color-accent-10: #c49cd3;
+$color-accent-11: #e6d4ec;
+$color-accent-12: #f7f1f9;
+
+$color-success: #27ae60;
+$color-success-text: #fff;
+$color-warning: #f39c12;
+$color-warning-text: #212529;
+$color-error: #e73c3c;
+$color-error-text: #fff;
+$color-info: #3498db;
+$color-info-text: #fff;
+
+$color-disabled: #2a363e;
+$color-disabled-text: #6c7d8c;
+$color-hover: #93bdb833;
+$color-hover-active: #93bdb866;
+
+:root {
+    // CSS Vars bindings
+    --color-base: #{$color-neutral-3};
+    --color-base-text: #fff;
+    --color-pane: #{$color-neutral-1};
+    --color-pane-text: #{$color-neutral-11};
+    --color-surface: #{$color-neutral-2};
+    --color-surface-text: #fff;
+    --color-element: #{$color-neutral-4};
+    --color-element-text: #fff;
+
+    --color-primary: #{$color-primary-9};
+    --color-primary-text: #fff;
+
+    --color-accent: #{$color-accent-9};
+    --color-accent-text: #fff;
+
+    --color-success: #{$color-success};
+    --color-success-text: #{$color-success-text};
+    --color-warning: #{$color-warning};
+    --color-warning-text: #{$color-warning-text};
+    --color-error: #{$color-error};
+    --color-error-text: #{$color-error-text};
+    --color-info: #{$color-info};
+    --color-info-text: #{$color-info-text};
+
+    --color-outline: #{$color-neutral-6};
+    --color-disabled: #{$color-disabled};
+    --color-disabled-text: #{$color-disabled-text};
+    --color-hover: #{$color-hover};
+    --color-hover-active: #{$color-hover-active};
+
+    --color-modal-overlay: #{$color-neutral-1}b3;
+}

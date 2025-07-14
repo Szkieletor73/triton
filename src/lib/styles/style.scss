@@ -1,0 +1,29 @@
+@forward "./layout-vars.scss";
+@forward "./fonts.scss";
+@forward "./themes/dark.scss";
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background-color: var(--color-base);
+    color: var(--color-base-text);
+    font-display: swap;
+}
+
+body, html, menu, figure {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}

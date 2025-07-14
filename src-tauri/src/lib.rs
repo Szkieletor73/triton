@@ -1,7 +1,13 @@
 mod commands;
 mod database;
+// mod video;
+
+use std::path::PathBuf;
 
 use tauri::Manager;
+use once_cell::sync::OnceCell;
+
+static APP_DATA_DIR: OnceCell<PathBuf> = OnceCell::new();
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -9,10 +15,16 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_window_state::Builder::new().build())
         .setup(|app| {
-            let db_path = app
+            let app_data_dir = app
                 .path()
                 .app_data_dir()
-                .expect("Failed to get App Data Dir")
+                .expect("Failed to get App Data Dir");
+
+            APP_DATA_DIR.set(app_data_dir)
+                .expect("Failed to set APP_DATA_DIR global (already initialized?)");
+
+            let db_path = APP_DATA_DIR.get()
+                .expect("Failed to get global APP_DATA_DIR")
                 .join("database.db");
 
             let pool = tokio::runtime::Runtime::new()
