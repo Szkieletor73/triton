@@ -25,9 +25,11 @@ class LibraryManager {
     constructor() {}
 
     getItems(): number[] {
-        console.log(this.#items)
-        console.log(Array.from(this.#items.keys()))
         return Array.from(this.#items.keys())
+    }
+
+    getItem(id: number): LibraryItem | null | undefined {
+        return this.#items.get(id)
     }
 
     fetchItems() {
@@ -55,6 +57,12 @@ class LibraryManager {
             } else {
                 console.error("[LibraryManager] get_item_details did not return an array:", items)
             }
+        })
+    }
+
+    addItems() {
+        invoke("add_items", {}).then((result) => {
+            console.log(result)
         })
     }
 }

@@ -1,16 +1,16 @@
 <script lang="ts">
     let { items } = $props();
     import LibraryManager from "$lib/components/library/LibraryManager.svelte"
-    import type { Attachment } from "svelte/attachments";
     import LibraryItem from "./LibraryItem.svelte";
+    import { onMount } from "svelte";
 
-    const loadLibraryItems: Attachment = () => {
-        
-    }
+    onMount(() => {
+        LibraryManager.loadItems(items)
+    })
 </script>
 
 <ul class="library-list-container">
-    {#each items as item}
-        <LibraryItem {item}></LibraryItem>
+    {#each items as id}
+        <LibraryItem item={LibraryManager.getItem(id)}></LibraryItem>
     {/each}
 </ul>

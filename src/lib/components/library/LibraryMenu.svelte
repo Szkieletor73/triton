@@ -5,7 +5,7 @@
     import NotificationManager from "$lib/components/notifications/NotificationManager.svelte"
 
     function addItems() {
-        // LibraryManager.addItems()
+        LibraryManager.addItems()
     }
     function fetchItems() {
         LibraryManager.fetchItems()

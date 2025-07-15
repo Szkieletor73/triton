@@ -89,14 +89,35 @@ pub async fn get_item_details(
 pub async fn add_items(
     pool: &SqlitePool,
     file_paths: &Vec<PathBuf>
-) -> Result<Vec<i64>, Error> {
+) -> Result<(Vec<i64>, Vec<String>), Error> {
     if file_paths.is_empty() {
-        return Ok(Vec::new())
+        return Ok((Vec::new(), Vec::new()))
     }
 
-    // Start query string (we'll append to it later)
-    let mut query = String::from("INSERT INTO items (path, title, extension) VALUES");
+    // Collect all paths as strings
+    let paths: Vec<String> = file_paths.iter()
+        .map(|p| p.display().to_string())
+        .collect();
 
+    // Query for existing paths
+    let mut query_existing = String::from("SELECT path FROM items WHERE path IN (");
+    for (i, _) in paths.iter().enumerate() {
+        if i > 0 {
+            query_existing.push_str(", ");
+        }
+        query_existing.push_str(&format!("?{}", i + 1));
+    }
+    query_existing.push(')');
+
+    let mut q = sqlx::query_scalar::<_, String>(&query_existing);
+    for path in &paths {
+        q = q.bind(path);
+    }
+    let existing_paths: Vec<String> = q.fetch_all(pool).await?;
+
+    // Start query string (we'll append to it later)
+    let mut query = String::from("INSERT OR IGNORE INTO items (path, title, extension) VALUES");
+    let mut any_valid = false;
     for path in file_paths {
         if path.as_os_str().is_empty() {
             continue;
@@ -116,7 +137,9 @@ pub async fn add_items(
             &format!(
             " (\"{}\", \"{}\", \"{}\"),",
             item.0, item.1, item.2
-        ))
+        ));
+        
+        any_valid = true;
     }
 
     if query.ends_with(",") {
@@ -125,8 +148,13 @@ pub async fn add_items(
 
     query.push_str(" RETURNING id");
 
-    // Execute
-    sqlx::query_scalar::<_, i64>(&query).fetch_all(pool).await
+    let inserted_ids = if any_valid {
+        sqlx::query_scalar::<_, i64>(&query).fetch_all(pool).await?
+    } else {
+        Vec::new()
+    };
+
+    Ok((inserted_ids, existing_paths))
 }
 
 pub async fn delete_items(

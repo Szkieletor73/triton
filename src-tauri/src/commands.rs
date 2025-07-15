@@ -8,7 +8,7 @@ use tauri_plugin_dialog::DialogExt;
 pub async fn add_items(
     app: tauri::AppHandle,
     pool: State<'_, database::DbPool>
-) -> Result<Vec<i64>, String> {
+) -> Result<(Vec<i64>, Vec<String>), String> {
     let pool = pool.inner().clone();
     let tokio_handle = tokio::runtime::Handle::current();
 
@@ -28,7 +28,7 @@ pub async fn add_items(
                         .await
                         .map_err(|e| e.to_string())
                 }
-                None => Ok(Vec::new())
+                None => Ok((Vec::new(), Vec::new()))
             };
 
             let _ = tx.send(result);
