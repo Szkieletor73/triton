@@ -5,6 +5,17 @@ use sqlx::{Column, Error, Row, SqlitePool, TypeInfo};
 
 use super::entities::item::Item;
 
+pub struct AddItemsResult {
+    pub success: Vec<i64>,
+    pub duplicates: Vec<String>,
+    pub errors: Vec<AddItemError>,
+}
+
+pub struct AddItemError {
+    pub path: String,
+    pub error: String,
+}
+
 pub async fn execute_raw_sql(
     pool: &SqlitePool,
     query: String,
@@ -62,9 +73,18 @@ pub async fn get_items(
     let mut query = String::from("SELECT id FROM items");
 
     if !search.is_empty() {
-        query.push_str(" WHERE");
+        // Add basic search functionality for title and path
+        query.push_str(" WHERE title LIKE ? OR path LIKE ?");
+        let search_pattern = format!("%{}%", search);
+        return sqlx::query_scalar::<_, i64>(&query)
+            .bind(&search_pattern)
+            .bind(&search_pattern)
+            .fetch_all(pool)
+            .await;
     }
 
+    // Order by most recently added for better UX
+    query.push_str(" ORDER BY added DESC");
     sqlx::query_scalar::<_, i64>(&query).fetch_all(pool).await
 }
 
@@ -73,88 +93,125 @@ pub async fn get_item_details(
     ids: &Vec<i64>
 ) -> Result<Vec<Item>, Error> {
     if ids.is_empty() {
-        return Err(Error::RowNotFound)
+        return Ok(Vec::new()) // Return empty vec instead of error
     }
 
-    let query = String::from(
-        format!(
-            "SELECT * FROM items WHERE id IN ({})",
-            ids.iter().map(|id| id.to_string()).collect::<Vec<_>>().join(", ")
-        )
+    // For better performance with large batches, use parameter binding
+    // Build placeholders for the IN clause
+    let placeholders: Vec<String> = (0..ids.len()).map(|i| format!("?{}", i + 1)).collect();
+    let query = format!(
+        "SELECT * FROM items WHERE id IN ({}) ORDER BY id",
+        placeholders.join(", ")
     );
 
-    sqlx::query_as::<_, Item>(&query).fetch_all(pool).await
+    let mut query_builder = sqlx::query_as::<_, Item>(&query);
+    
+    // Bind all the IDs
+    for id in ids {
+        query_builder = query_builder.bind(id);
+    }
+
+    query_builder.fetch_all(pool).await
 }
 
 pub async fn add_items(
     pool: &SqlitePool,
     file_paths: &Vec<PathBuf>
-) -> Result<(Vec<i64>, Vec<String>), Error> {
+) -> Result<AddItemsResult, Error> {
     if file_paths.is_empty() {
-        return Ok((Vec::new(), Vec::new()))
+        return Ok(AddItemsResult {
+            success: Vec::new(),
+            duplicates: Vec::new(),
+            errors: Vec::new(),
+        })
     }
+
+    let mut success_ids = Vec::new();
+    let mut duplicates = Vec::new();
+    let mut errors = Vec::new();
 
     // Collect all paths as strings
     let paths: Vec<String> = file_paths.iter()
         .map(|p| p.display().to_string())
         .collect();
 
-    // Query for existing paths
-    let mut query_existing = String::from("SELECT path FROM items WHERE path IN (");
-    for (i, _) in paths.iter().enumerate() {
-        if i > 0 {
-            query_existing.push_str(", ");
+    // Query for existing paths to identify duplicates
+    if !paths.is_empty() {
+        let mut query_existing = String::from("SELECT path FROM items WHERE path IN (");
+        for (i, _) in paths.iter().enumerate() {
+            if i > 0 {
+                query_existing.push_str(", ");
+            }
+            query_existing.push_str(&format!("?{}", i + 1));
         }
-        query_existing.push_str(&format!("?{}", i + 1));
-    }
-    query_existing.push(')');
+        query_existing.push(')');
 
-    let mut q = sqlx::query_scalar::<_, String>(&query_existing);
-    for path in &paths {
-        q = q.bind(path);
+        let mut q = sqlx::query_scalar::<_, String>(&query_existing);
+        for path in &paths {
+            q = q.bind(path);
+        }
+        
+        match q.fetch_all(pool).await {
+            Ok(existing_paths) => duplicates = existing_paths,
+            Err(e) => {
+                // If we can't check for duplicates, treat it as an error for all paths
+                for path in &paths {
+                    errors.push(AddItemError {
+                        path: path.clone(),
+                        error: format!("Failed to check for duplicates: {}", e),
+                    });
+                }
+                return Ok(AddItemsResult { success: success_ids, duplicates, errors });
+            }
+        }
     }
-    let existing_paths: Vec<String> = q.fetch_all(pool).await?;
 
-    // Start query string (we'll append to it later)
-    let mut query = String::from("INSERT OR IGNORE INTO items (path, title, extension) VALUES");
-    let mut any_valid = false;
+    // Process each file individually to handle errors per file
     for path in file_paths {
-        if path.as_os_str().is_empty() {
+        let path_str = path.display().to_string();
+        
+        // Skip if it's a duplicate
+        if duplicates.contains(&path_str) {
             continue;
         }
+
+        // Validate path
+        if path.as_os_str().is_empty() {
+            errors.push(AddItemError {
+                path: path_str,
+                error: "Empty path".to_string(),
+            });
+            continue;
+        }
+
         let extension = path.extension().and_then(|os_str| os_str.to_str()).unwrap_or("");
         let filename = path.file_stem().and_then(|os_str| os_str.to_str()).unwrap_or("");
 
-        let abs_path = path.display().to_string();
-
-        let item = (
-            abs_path.as_str(),
-            filename,
-            extension
-        );
-
-        query.push_str(
-            &format!(
-            " (\"{}\", \"{}\", \"{}\"),",
-            item.0, item.1, item.2
-        ));
+        // Insert individual item
+        let query = "INSERT INTO items (path, title, extension) VALUES (?, ?, ?) RETURNING id";
         
-        any_valid = true;
+        match sqlx::query_scalar::<_, i64>(query)
+            .bind(&path_str)
+            .bind(filename)
+            .bind(extension)
+            .fetch_one(pool)
+            .await 
+        {
+            Ok(id) => success_ids.push(id),
+            Err(e) => {
+                errors.push(AddItemError {
+                    path: path_str,
+                    error: e.to_string(),
+                });
+            }
+        }
     }
 
-    if query.ends_with(",") {
-        query.pop();
-    }
-
-    query.push_str(" RETURNING id");
-
-    let inserted_ids = if any_valid {
-        sqlx::query_scalar::<_, i64>(&query).fetch_all(pool).await?
-    } else {
-        Vec::new()
-    };
-
-    Ok((inserted_ids, existing_paths))
+    Ok(AddItemsResult {
+        success: success_ids,
+        duplicates,
+        errors,
+    })
 }
 
 pub async fn delete_items(

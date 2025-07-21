@@ -49,8 +49,6 @@ $color-info-text: #fff;
 
 $color-disabled: #2a363e;
 $color-disabled-text: #6c7d8c;
-$color-hover: #93bdb833;
-$color-hover-active: #93bdb866;
 
 :root {
     // CSS Vars bindings
@@ -65,9 +63,13 @@ $color-hover-active: #93bdb866;
 
     --color-primary: #{$color-primary-9};
     --color-primary-text: #fff;
+    --color-primary-lighter: #{$color-primary-10};
+    --color-primary-darker: #{$color-primary-8};
 
     --color-accent: #{$color-accent-9};
     --color-accent-text: #fff;
+    --color-accent-lighter: #{$color-accent-10};
+    --color-accent-darker: #{$color-accent-8};
 
     --color-success: #{$color-success};
     --color-success-text: #{$color-success-text};
@@ -81,8 +83,6 @@ $color-hover-active: #93bdb866;
     --color-outline: #{$color-neutral-6};
     --color-disabled: #{$color-disabled};
     --color-disabled-text: #{$color-disabled-text};
-    --color-hover: #{$color-hover};
-    --color-hover-active: #{$color-hover-active};
 
     --color-modal-overlay: #{$color-neutral-1}b3;
 }

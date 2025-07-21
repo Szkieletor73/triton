@@ -8,7 +8,7 @@
         LibraryManager.fetchItems()
     })
     
-    const filteredIds: Number[] = $derived(LibraryManager.getItems())
+    const filteredIds: number[] = $derived(LibraryManager.getIds())
 </script>
 
 <div class="library-container">

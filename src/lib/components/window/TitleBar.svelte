@@ -49,8 +49,6 @@
 
 
 <style lang="scss">
-    @use "$lib/styles/mixins/interactive";
-
     .container {
         background-color: var(--color-pane);
         color: var(--color-pane-text);
@@ -71,7 +69,7 @@
         display: flex;
 
         button {
-            @include interactive.interactable;
+            cursor: pointer;
 
             font-size: 14px;
             padding: 0px 16px;
@@ -80,6 +78,10 @@
             color: var(--color-pane-text);
             background-color: transparent;
             transition: background-color 0.2s;
+
+            &:hover {
+                background-color: var(--color-element);
+            }
 
             &.action-close:hover {
                 background-color: var(--color-error);

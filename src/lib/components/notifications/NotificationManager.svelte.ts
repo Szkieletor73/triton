@@ -27,7 +27,7 @@ class NotificationManager {
     spawn(
         type: "success" | "error" | "info" | "warning",
         message: string,
-        duration: number = 3000
+        duration: number = 5000
     ) {
         this.#notifications.push({
             id: NotificationManager.#nextId++,

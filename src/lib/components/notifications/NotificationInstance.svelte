@@ -34,11 +34,8 @@
 </div>
 
 <style lang="scss">
-    @use "$lib/styles/mixins/interactive";
 
     .notification {
-        @include interactive.interactable;
-
         background-color: var(--color-surface);
         color: var(--color-surface-text);
 

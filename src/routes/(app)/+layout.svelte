@@ -1,13 +1,10 @@
 <script lang="ts">
     import type { LayoutProps } from "./$types";
-    import SideBar from "$lib/components/window/SideBar.svelte";
 
     let { children }: LayoutProps = $props();
 </script>
 
 <div id="app-container">
-    <SideBar></SideBar>
-
     <main id="content-container">
         {@render children()}
     </main>
